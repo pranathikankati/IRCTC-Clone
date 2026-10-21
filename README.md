@@ -4,7 +4,7 @@ A full-stack railway reservation web application inspired by IRCTC workflows. Th
 
 ## Live Demo
 
-- Frontend: https://subbu-irctc-clone.onrender.com/
+- Frontend: https://pranathi-irctc-clone.onrender.com/
 - Backend health check: https://irctc-backend-r0p7.onrender.com/api/health
 
 ## Highlights
@@ -91,7 +91,7 @@ IRCTC-Clone/
 ### 1. Clone the repository
 
 ```bash
-git clone https://github.com/Subbareddy987/IRCTC-Clone.git
+git clone https://github.com/pranathikankati/IRCTC-Clone.git
 cd IRCTC-Clone
 ```
 

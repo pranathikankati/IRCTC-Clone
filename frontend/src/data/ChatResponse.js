@@ -2,14 +2,14 @@ export const chatResponses = [
   // Greetings
   {
     keywords: ["hi", "hello", "hey", "hii", "good morning", "good evening"],
-    reply: "Hello! Welcome to Subbu IRCTC AI. How can I help you today?",
+    reply: "Hello! Welcome to Pranathi's IRCTC AI. How can I help you today?",
     action: null,
   },
 
   {
     keywords: ["who are you", "about you"],
     reply:
-      "I'm Subbu's IRCTC AI, your personal railway assistant. I can help with train search, bookings, PNR status and food ordering.",
+      "I'm Pranathi's IRCTC AI, your personal railway assistant. I can help with train search, bookings, PNR status and food ordering.",
     action: null,
   },
 

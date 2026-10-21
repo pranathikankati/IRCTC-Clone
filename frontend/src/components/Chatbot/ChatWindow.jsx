@@ -14,7 +14,7 @@ const ChatWindow = ({
     <section className="chat-window" aria-label="RailMate AI chat">
       <div className="chat-header">
         <div>
-          <p>Subbu's IRCTC AI</p>
+          <p>Pranathi's IRCTC AI</p>
           <span>Online railway assistant</span>
         </div>
 

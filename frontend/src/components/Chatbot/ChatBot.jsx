@@ -8,7 +8,7 @@ const ChatBot = () => {
   const [messages, setMessages] = useState([
     {
       sender: "bot",
-      text: "Namaskaram ! I am Subbu's AI. How can I help you today?",
+      text: "Namaskaram! I am Pranathi's AI. How can I help you today?",
     },
   ]);
   const [open, setOpen] = useState(false);
