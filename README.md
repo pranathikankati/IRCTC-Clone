@@ -4,7 +4,7 @@ A full-stack railway reservation web application inspired by IRCTC workflows. Th
 
 ## Live Demo
 
-- Frontend: https://pranathi-irctc-clone.onrender.com/
+- Frontend: https://irctc-clone-saoa.onrender.com/
 - Backend health check: https://irctc-backend-r0p7.onrender.com/api/health
 
 ## Highlights
