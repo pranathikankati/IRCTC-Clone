@@ -1,0 +1,13 @@
+node_modules/
+*/node_modules/
+dist/
+*/dist/
+.env
+*/.env
+*.log
+*/logs/
+irctc_clone.sql
+.DS_Store
+.vscode/
+.idea/
+

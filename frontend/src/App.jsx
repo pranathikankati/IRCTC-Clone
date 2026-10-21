@@ -1,0 +1,71 @@
+import { useEffect } from "react";
+import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
+import "./App.css";
+import Register from "./pages/Register.jsx";
+import Login from "./pages/Login.jsx";
+import Home from "./pages/Home.jsx";
+import Searchtrain from "./pages/Searchtrain.jsx";
+import TrainDetails from "./pages/TrainDetails.jsx";
+import Availability from "./pages/Availability.jsx";
+import SeatSelection from "./pages/SeatSelection.jsx";
+import MyBookings from "./pages/MyBooking.jsx";
+import BookingDetails from "./pages/BookingDetails.jsx";
+import SearchPNR from "./pages/SearchPNR.jsx";
+import Payment from "./pages/Payment.jsx";
+import FoodSelection from "./pages/FoodSelection.jsx";
+import AboutDeveloper from "./pages/AboutDeveloper.jsx";
+import Navbar from "./components/Navbar.jsx";
+import ChatBot from "./components/Chatbot/ChatBot";
+import "./styles/global.css";
+function ScrollToTop() {
+  const { pathname } = useLocation();
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [pathname]);
+
+  return null;
+}
+
+function AppContent() {
+  const location = useLocation();
+
+  const hideNavbar =
+    location.pathname === "/" || location.pathname === "/register";
+  const showChatBot = !hideNavbar && Boolean(localStorage.getItem("token"));
+
+  return (
+    <>
+      <ScrollToTop />
+      {!hideNavbar && <Navbar />}
+
+      <Routes>
+        <Route path="/" element={<Login />} />
+        <Route path="/register" element={<Register />} />
+        <Route path="/home" element={<Home />} />
+        <Route path="/trains/search" element={<Searchtrain />} />
+        <Route path="/traindata/:train_id" element={<TrainDetails />} />
+        <Route path="/availability/:train_id" element={<Availability />} />
+        <Route path="/seats/:train_id" element={<SeatSelection />} />
+        <Route path="/mybookings" element={<MyBookings />} />
+        <Route path="/booking/:booking_id" element={<BookingDetails />} />
+        <Route path="/pnr-search" element={<SearchPNR />} />
+        <Route path="/food-selection" element={<FoodSelection />} />
+        <Route path="/payment" element={<Payment />} />
+        <Route path="/about-developer" element={<AboutDeveloper />} />
+      </Routes>
+      {showChatBot && <ChatBot />}
+    </>
+  );
+}
+function App() {
+  return (
+    <div>
+      <BrowserRouter>
+         <AppContent />
+      </BrowserRouter>
+    </div>
+  );
+}
+
+export default App;

@@ -1,0 +1,221 @@
+import axios from "axios";
+const API_URL =
+  import.meta.env.VITE_API_URL || "https://irctc-backend-r0p7.onrender.com/api";
+const FOOD_CACHE_KEY = "food_menu_cache_v4";
+const FOOD_CACHE_TTL_MS = 10 * 60 * 1000;
+
+const readFoodCache = () => {
+  try {
+    return JSON.parse(localStorage.getItem(FOOD_CACHE_KEY) || "{}");
+  } catch {
+    return {};
+  }
+};
+
+const writeFoodCache = (cache) => {
+  try {
+    localStorage.setItem(FOOD_CACHE_KEY, JSON.stringify(cache));
+  } catch {
+    // Cache is optional. Ignore storage quota/private mode failures.
+  }
+};
+
+export const registeruser = async (userdata) => {
+  const response = await axios.post(`${API_URL}/auth/register`, userdata);
+  return response.data;
+};
+export const loginuser = async (userdata) => {
+  const response = await axios.post(`${API_URL}/auth/login`, userdata);
+  return response.data;
+};
+export const getProfile = async () => {
+  const token = localStorage.getItem("token");
+  const response = await axios.get(`${API_URL}/auth/profile`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+  return response.data;
+};
+export const removeprofile = async () => {
+  localStorage.removeItem("token");
+  localStorage.removeItem("user");
+};
+export const searchTrains = async (source, destination) => {
+  const response = await axios.get(`${API_URL}/trains/search/`, {
+    params: { source, destination },
+  });
+  return response.data;
+};
+export const getTraindetails = async (train_id, source, destination) => {
+  const response = await axios.get(`${API_URL}/trains/traindata/${train_id}`, {
+    params: { source, destination },
+  });
+  return response.data;
+};
+export const getTrainCoaches = async (train_id) => {
+  const response = await axios.get(`${API_URL}/trains/coaches/${train_id}`);
+  return response.data;
+};
+export const checkAvailability = async (train_id, travel_date, coach_name) => {
+  const response = await axios.get(`${API_URL}/trains/availability`, {
+    params: {
+      train_id,
+      travel_date,
+      coach_name,
+    },
+  });
+
+  return response.data;
+};
+export const getSeats = async (train_id, travel_date, coach_name) => {
+  const response = await axios.get(`${API_URL}/bookings/seats/${train_id}`, {
+    params: { travel_date, coach_name },
+  });
+
+  return response.data;
+};
+
+export const lockSeatApi = async (train_id, travel_date, seat_id) => {
+  const token = localStorage.getItem("token");
+  const response = await axios.post(
+    `${API_URL}/bookings/lock`,
+    { train_id, travel_date, seat_id },
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    },
+  );
+  return response.data;
+};
+
+export const unlockSeatApi = async (train_id, travel_date, seat_id) => {
+  const token = localStorage.getItem("token");
+  const response = await axios.post(
+    `${API_URL}/bookings/unlock`,
+    { train_id, travel_date, seat_id },
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    },
+  );
+  return response.data;
+};
+
+export const unlockSeatOnUnload = (train_id, travel_date, seat_id) => {
+  const token = localStorage.getItem("token");
+  if (!token || !train_id || !travel_date || !seat_id) return;
+
+  fetch(`${API_URL}/bookings/unlock`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify({ train_id, travel_date, seat_id }),
+    keepalive: true,
+  }).catch(() => {});
+};
+export const createBooking = async (bookingData) => {
+  const token = localStorage.getItem("token");
+
+  const response = await axios.post(`${API_URL}/bookings`, bookingData, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+
+  return response.data;
+};
+export const myBookings = async () => {
+  const token = localStorage.getItem("token");
+
+  const response = await axios.get(`${API_URL}/bookings/mybookings`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+
+  return response.data;
+};
+export const getBookingDetails = async (booking_id) => {
+  const token = localStorage.getItem("token");
+
+  const response = await axios.get(`${API_URL}/bookings/${booking_id}`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+
+  return response.data;
+};
+export const cancelBooking = async (booking_id) => {
+  const token = localStorage.getItem("token");
+
+  const response = await axios.delete(
+    `${API_URL}/bookings/cancel/${booking_id}`,
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    },
+  );
+
+  return response.data;
+};
+export const getBookingByPNR = async (pnr) => {
+  const token = localStorage.getItem("token");
+
+  const response = await axios.get(`${API_URL}/bookings/pnr/${pnr}`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+
+  return response.data;
+};
+export const getStations = async () => {
+  const response = await axios.get(
+    `${API_URL}/stations`
+  );
+
+  return response.data;
+};
+
+export const getFoodStationsForJourney = async (
+  train_id,
+  source_station_id,
+  destination_station_id,
+) => {
+  const response = await axios.get(`${API_URL}/food/stations`, {
+    params: {
+      train_id,
+      source_station_id,
+      destination_station_id,
+    },
+  });
+
+  return response.data;
+};
+
+export const getStationFoodMenu = async (station_code) => {
+  const stationCode = station_code.toUpperCase();
+  const cache = readFoodCache();
+  const cached = cache[stationCode];
+  const isFresh = cached && Date.now() - cached.savedAt < FOOD_CACHE_TTL_MS;
+
+  if (isFresh) {
+    return cached.data;
+  }
+
+  const response = await axios.get(`${API_URL}/food/menu/${stationCode}`);
+  cache[stationCode] = {
+    savedAt: Date.now(),
+    data: response.data,
+  };
+  writeFoodCache(cache);
+
+  return response.data;
+};
